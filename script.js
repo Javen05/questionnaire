@@ -76,12 +76,10 @@ questions = [
             "question": "Please provide feedback",
             // don't need to specify options if it's response
         },
-]
+    ]
     
 compulsoryQuestions = [1, "Feedback"];
-
-
-
+    
 function generateQuestion(questionNumber, question, options, inputType, trigger) {
     const defaultOption = '<option value="" disabled selected>Please select an option</option>';
     let html = `
@@ -119,6 +117,7 @@ function generateQuestion(questionNumber, question, options, inputType, trigger)
                     <input class="form-check-input" type="radio" name="question${questionNumber}" id="q${questionNumber}optionRefused" value="999">
                     <label class="form-check-label" for="q${questionNumber}optionRefused">Refused</label>
                 </div>
+                <button type="button" class="btn btn-secondary btn-sm clear-response" data-question="${questionNumber}">Clear Response</button>
             `;
             break;
         default:
@@ -165,6 +164,18 @@ document.getElementById('questionForm').addEventListener('change', function(even
     if (nextQuestion) {
         const nextQuestionElement = document.querySelector(`.question[data-question="${nextQuestion}"]`);
         nextQuestionElement.classList.remove('d-none');
+    }
+});
+
+document.getElementById('questionForm').addEventListener('click', function(event) {
+    const target = event.target;
+    if (target.classList.contains('clear-response')) {
+        const questionNumber = target.getAttribute('data-question');
+        document.getElementById(`q${questionNumber}response`).value = '';
+        const radios = document.querySelectorAll(`input[name="question${questionNumber}"]`);
+        radios.forEach(radio => {
+            radio.checked = false;
+        });
     }
 });
 
@@ -222,4 +233,4 @@ document.getElementById('questionForm').addEventListener('submit', function(even
     });
 
     window.location.href = 'results.html?data=' + encodeURIComponent(JSON.stringify(formData));
-});
+}); // add a button for response to clear radiobox and add own custom trigger if radiobox is selected for response
