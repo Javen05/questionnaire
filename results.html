@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Questionnaire Results</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Questionnaire Results</h1>
+            <div id="results"></div>
+            <div class="mt-3">
+                <a id="downloadJson" class="btn btn-primary mr-2" href="#" download="results.json">Download JSON</a>
+                <a id="downloadCsv" class="btn btn-primary mr-2" href="#" download="results.csv">Download CSV</a>
+                <button id="retryButton" class="btn btn-primary">Retry Questionnaire</button>
+            </div>
+        </div>
+
+        <script>
+            // Get form data from query string
+            var urlParams = new URLSearchParams(window.location.search);
+            var formData = urlParams.get('data');
+            var resultsContainer = document.getElementById('results');
+
+            // Parse JSON data and display results
+            if (formData) {
+                var parsedData = JSON.parse(decodeURIComponent(formData));
+                parsedData.forEach(function(entry) {
+                    var resultHtml = '<div class="mb-3">';
+                    resultHtml += '<strong>Question Number:</strong> ' + entry.number + '<br>';
+                    resultHtml += '<strong>Question:</strong> ' + entry.question + '<br>';
+                    resultHtml += '<strong>Answer:</strong> ' + entry.value.join(', ');
+                    resultHtml += '</div>';
+                    resultsContainer.innerHTML += resultHtml;
+                });
+            } else {
+                resultsContainer.innerHTML = '<p>No data available.</p>';
+            }
+
+            // Function to convert JSON to CSV
+            function jsonToCsv(json) {
+                var csv = 'Question Number,Question,Answer\n';
+                json.forEach(function(obj) {
+                    csv += obj.number + ',' + obj.question + ',"' + obj.value + '"\n';
+                });
+                return csv;
+            }
+
+            // Function to trigger download of JSON and CSV files
+            document.getElementById('downloadJson').addEventListener('click', function(event) {
+                event.preventDefault();
+                var jsonData = JSON.stringify(parsedData, null, 2);
+                var blob = new Blob([jsonData], { type: 'application/json' });
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'results.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+
+            document.getElementById('downloadCsv').addEventListener('click', function(event) {
+                event.preventDefault();
+                var csvData = jsonToCsv(parsedData);
+                var blob = new Blob([csvData], { type: 'text/csv' });
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'results.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+
+            // Retry questionnaire button click event
+            document.getElementById('retryButton').addEventListener('click', function() {
+                // Redirect to the questionnaire page
+                window.location.href = 'index.html';
+            });
+        </script>
+    </body>
+</html>
