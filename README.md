@@ -10,6 +10,7 @@ https://javen05.github.io/questionnaire/
 
 ## Features
 Different response will lead to different questions.
+Option to trigger further questioning after response text input.
 
 ## Notice
-The 'response' and 'checks' question type are buggy when triggering target question.
+The 'checkbox' question type triggers get fuzzy when selecting and unselecting options.
