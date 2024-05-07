@@ -2,7 +2,7 @@ questions = [
     //   How to add a question
     //   {
     //     "number": {can be number or string, but first record must be 1 in integer}
-    //     "inputType": {can be radio, checks, response, or dropdown},
+    //     "inputType": {can be radio, checkbox, response, or dropdown},
     //     "question": {question text},
     //     "options": [
     //       { "value": {value}, "label": {label of option}, "trigger": {question number to trigger next question} },
@@ -21,12 +21,12 @@ questions = [
         },
         {
             "number": "1a",
-            "inputType": "checks",
+            "inputType": "checkbox",
             "question": "What components are you interested in?",
             "options": [
                 { "value": "Dropdown", "label": "Dropdown (Default)", "trigger": 2 },
                 { "value": "Radio", "label": "Radio", "trigger": 3 },
-                { "value": "Checks", "label": "Checks", "trigger": 4 },
+                { "value": "checkbox", "label": "checkbox", "trigger": 4 },
                 { "value": "Response", "label": "Response", "trigger": 5 }
             ]
         },
@@ -50,7 +50,7 @@ questions = [
         },
         {
             "number": 4,
-            "inputType": "checks",
+            "inputType": "checkbox",
             "question": "This survey ends here regardless ur input",
             "options": [
                 { "value": 1, "label": "Yes" },
@@ -62,7 +62,7 @@ questions = [
             "inputType": "response",
             "question": "This survey ends here regardless ur input",
             // don't need to specify options if it's response
-            "target": 6
+            "trigger": 6
         },
         {
             "number": 6,
@@ -74,14 +74,15 @@ questions = [
     
 
     
-function generateQuestion(questionNumber, question, options, inputType) {
-    var html = "";
-    html += '<div class="form-group question ' + (questionNumber === 1 ? '' : 'd-none') + '" data-question="' + questionNumber + '">';
-    html += '<label>Question ' + questionNumber + ': ' + question + '</label>';
+function generateQuestion(questionNumber, question, options, inputType, trigger) {
+    const defaultOption = '<option value="" disabled selected>Please select an option</option>';
+    let html = `
+        <div class="form-group question ${questionNumber === 1 ? '' : 'd-none'}" data-question="${questionNumber}">
+            <label>Question ${questionNumber}: ${question}</label>
+    `;
 
-    // Generate input based on the input type
     switch (inputType) {
-        case 'checks':
+        case 'checkbox':
             options.forEach(function(option) {
                 html += '<div class="form-check">';
                 html += '<input class="form-check-input" type="checkbox" id="q' + questionNumber + 'option' + option.value + '" value="' + option.value + '" data-trigger="' + (option.trigger ? option.trigger : '') + '">';
@@ -90,31 +91,35 @@ function generateQuestion(questionNumber, question, options, inputType) {
             });
             break;
         case 'radio':
-            options.forEach(function(option) {
-                html += '<div class="form-check">';
-                html += '<input class="form-check-input" type="radio" name="question' + questionNumber + '" id="q' + questionNumber + 'option' + option.value + '" value="' + option.value + '" data-trigger="' + (option.trigger ? option.trigger : '') + '">';
-                html += '<label class="form-check-label" for="q' + questionNumber + 'option' + option.value + '">' + option.label + '</label>';
-                html += '</div>';
+            options.forEach(option => {
+                html += `
+                    <div class="form-check">
+                        <input class="form-check-input" type="${inputType}" name="${inputType === 'radio' ? 'question' + questionNumber : ''}" id="q${questionNumber}option${option.value}" value="${option.value}" data-trigger="${option.trigger || ''}">
+                        <label class="form-check-label" for="q${questionNumber}option${option.value}">${option.label}</label>
+                    </div>
+                `;
             });
             break;
         case 'response':
-            html += '<input class="form-control" type="text" id="q' + questionNumber + 'response" name="question' + questionNumber + 'response" placeholder="Your response">';
-            html += '<div class="form-check">';
-            html += '<input class="form-check-input" type="radio" name="question' + questionNumber + '" id="q' + questionNumber + 'optionUnknown" value="998">';
-            html += '<label class="form-check-label" for="q' + questionNumber + 'optionUnknown">Don\'t Know</label>';
-            html += '</div>';
-            html += '<div class="form-check">';
-            html += '<input class="form-check-input" type="radio" name="question' + questionNumber + '" id="q' + questionNumber + 'optionRefused" value="999">';
-            html += '<label class="form-check-label" for="q' + questionNumber + 'optionRefused">Refused</label>';
-            html += '</div>';
-            break;        
-        default: // Default to dropdown if input type is not specified or recognized
-            html += '<select class="form-control" data-question="' + questionNumber + '">';
-            html += '<option value="" disabled selected>Please select an option</option>'; // Add default option
-            options.forEach(function(option) {
-                html += '<option value="' + option.value + '" data-trigger="' + (option.trigger ? option.trigger : '') + '">' + option.label + '</option>';
-            });
-            html += '</select>';
+            html += `
+                <input class="form-control" type="text" id="q${questionNumber}response" name="question${questionNumber}response" placeholder="Your response" data-trigger="${trigger || ''}">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question${questionNumber}" id="q${questionNumber}optionUnknown" value="998">
+                    <label class="form-check-label" for="q${questionNumber}optionUnknown">Don't Know</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question${questionNumber}" id="q${questionNumber}optionRefused" value="999">
+                    <label class="form-check-label" for="q${questionNumber}optionRefused">Refused</label>
+                </div>
+            `;
+            break;
+        default:
+            html += `
+                <select class="form-control" data-question="${questionNumber}">
+                    ${defaultOption}
+                    ${options.map(option => `<option value="${option.value}" data-trigger="${option.trigger || ''}">${option.label}</option>`).join('')}
+                </select>
+            `;
             break;
     }
 
@@ -122,64 +127,57 @@ function generateQuestion(questionNumber, question, options, inputType) {
     return html;
 }
 
-var questionContainer = document.getElementById('questionContainer');
-questions.forEach(function(q) {
-    questionContainer.innerHTML += generateQuestion(q.number, q.question, q.options, q.inputType);
+const questionContainer = document.getElementById('questionContainer');
+questions.forEach(q => {
+    questionContainer.innerHTML += generateQuestion(q.number, q.question, q.options, q.inputType, q.trigger);
 });
 
-// Event listener for changing answers
 document.getElementById('questionForm').addEventListener('change', function(event) {
-    var target = event.target;
+    const target = event.target;
+    const currentQuestionNumber = parseInt(target.closest('.question').getAttribute('data-question'));
+    let nextQuestion;
+
     if (target.classList.contains('form-control') || target.classList.contains('form-check-input')) {
-        var currentQuestionNumber = parseInt(target.closest('.question').getAttribute('data-question'));
-        var nextQuestion;
+        nextQuestion = target.getAttribute('data-trigger');
+    } else if (target.classList.contains('form-control')) {
+        nextQuestion = target.options[target.selectedIndex].getAttribute('data-trigger');
+    }
 
-        if (target.classList.contains('form-control')) {
-            nextQuestion = target.options[target.selectedIndex].getAttribute('data-trigger');
-        } else if (target.classList.contains('form-check-input')) {
-            nextQuestion = target.getAttribute('data-trigger');
-        }
-
-        // Hide all subsequent questions
-        var nextQuestionElements = document.querySelectorAll('.question');
-        nextQuestionElements.forEach(function(element) {
-            var qNumber = parseInt(element.getAttribute('data-question'));
-            if (qNumber > currentQuestionNumber) {
-                element.classList.add('d-none');
-                if (element.querySelector('select')) {
-                    var select = element.querySelector('select');
-                    select.selectedIndex = 0; // Reset selected option
-                }
+    const nextQuestionElements = document.querySelectorAll('.question');
+    nextQuestionElements.forEach(element => {
+        const qNumber = parseInt(element.getAttribute('data-question'));
+        if (qNumber > currentQuestionNumber) {
+            element.classList.add('d-none');
+            if (element.querySelector('select')) {
+                element.querySelector('select').selectedIndex = 0;
             }
-        });
-
-        // Show next question
-        if (nextQuestion) {
-            var nextQuestionElement = document.querySelector('.question[data-question="' + nextQuestion + '"]');
-            nextQuestionElement.classList.remove('d-none');
         }
+    });
+
+    if (nextQuestion) {
+        const nextQuestionElement = document.querySelector(`.question[data-question="${nextQuestion}"]`);
+        nextQuestionElement.classList.remove('d-none');
     }
 });
 
-// Event listener for changing answers
 document.getElementById('questionForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
 
-    var formData = Array.from(document.querySelectorAll('.question:not(.d-none)')).map(function(element) {
-        var select = element.querySelector('select');
-        var checkboxes = element.querySelectorAll('input[type="checkbox"]');
-        var radioInputs = element.querySelectorAll('input[type="radio"]');
-        var responseInput = element.querySelector('input[type="text"]');
-        var answered;
+    const formData = Array.from(document.querySelectorAll('.question:not(.d-none)')).map(element => {
+        const select = element.querySelector('select');
+        const checkboxes = element.querySelectorAll('input[type="checkbox"]');
+        const radioInputs = element.querySelectorAll('input[type="radio"]');
+        const responseInput = element.querySelector('input[type="text"]');
+        let answered;
 
         if (responseInput) {
-            answered = responseInput.value.trim() !== '' || getSelectedRadioValue(radioInputs) !== '';
+            answered = responseInput.value.trim() !== '' || Array.from(radioInputs).some(radio => radio.checked);
         } else if (select) {
             answered = select.selectedIndex !== 0;
         } else if (checkboxes.length > 0) {
-            answered = Array.from(checkboxes).some(function(checkbox) { return checkbox.checked; });
+            answered = Array.from(checkboxes).some(checkbox => checkbox.checked);
         } else {
-            answered = Array.from(radioInputs).some(function(radio) { return radio.checked; });
+            answered = Array.from(radioInputs).some(radio => radio.checked);
         }
 
         if (!answered) {
@@ -187,48 +185,33 @@ document.getElementById('questionForm').addEventListener('submit', function(even
             throw new Error('Unanswered question found.');
         }
 
-        var questionNumber = element.getAttribute('data-question');
-        var questionText = element.querySelector('label').innerText;
-        var selectedValues = [];
+        const questionNumber = element.getAttribute('data-question');
+        const questionText = element.querySelector('label').innerText;
+        let selectedValues = [];
 
         if (responseInput) {
-            var responseValue = responseInput.value.trim();
+            const responseValue = responseInput.value.trim();
             if (responseValue !== '') {
                 selectedValues.push(responseValue);
             }
-            var radioValue = getSelectedRadioValue(radioInputs);
-            if (radioValue !== '') {
+            const radioValue = Array.from(radioInputs).find(radio => radio.checked)?.value;
+            if (radioValue) {
                 selectedValues.push(radioValue);
             }
         } else if (select) {
-            Array.from(select.selectedOptions).forEach(function(option) {
-                selectedValues.push(option.value);
-            });
+            selectedValues = Array.from(select.selectedOptions).map(option => option.value);
         } else if (checkboxes.length > 0) {
-            Array.from(checkboxes).forEach(function(checkbox) {
-                if (checkbox.checked) {
-                    selectedValues.push(checkbox.value);
-                }
-            });
+            selectedValues = Array.from(checkboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
         } else {
-            var radioValue = getSelectedRadioValue(radioInputs);
-            if (radioValue !== '') {
+            const radioValue = Array.from(radioInputs).find(radio => radio.checked)?.value;
+            if (radioValue) {
                 selectedValues.push(radioValue);
             }
         }
 
-        // Filter out empty values
         selectedValues = selectedValues.filter(value => value !== '');
-
         return { number: questionNumber, question: questionText, value: selectedValues };
     });
 
-    // Proceed with form submission if all visible questions are answered
     window.location.href = 'results.html?data=' + encodeURIComponent(JSON.stringify(formData));
 });
-
-
-function getSelectedRadioValue(radioInputs) {
-    const selectedRadio = Array.from(radioInputs).find(radio => radio.checked);
-    return selectedRadio ? selectedRadio.value : '';
-} 
