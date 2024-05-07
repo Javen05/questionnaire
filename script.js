@@ -1,7 +1,7 @@
 questions = [
     //   How to add a question
     //   {
-    //     "number": {can be number or string, but first record must be 1 in integer}
+    //     "number": {can be number or string}
     //     "inputType": {can be radio, checkbox, response, or dropdown},
     //     "question": {question text},
     //     "options": [
@@ -11,7 +11,7 @@ questions = [
     //   },
     
         {
-            "number": 1, // DO NOT CHANGE THIS NUMBER
+            "number": 1,
             "inputType": "radio",
             "question": "Do you want to continue?",
             "options": [
@@ -70,14 +70,20 @@ questions = [
             "question": "Cool you found me!",
             // don't need to specify options if it's response
         },
+        {
+            "number": "Feedback",
+            "inputType": "response",
+            "question": "Please provide feedback",
+            // don't need to specify options if it's response
+        },
     ]
     
-
+compulsoryQuestions = [1, "Feedback"];
     
 function generateQuestion(questionNumber, question, options, inputType, trigger) {
     const defaultOption = '<option value="" disabled selected>Please select an option</option>';
     let html = `
-        <div class="form-group question ${questionNumber === 1 ? '' : 'd-none'}" data-question="${questionNumber}">
+        <div class="form-group question ${compulsoryQuestions.includes(questionNumber) ? '' : 'd-none'}" data-question="${questionNumber}">
             <label>Question ${questionNumber}: ${question}</label>
     `;
 
