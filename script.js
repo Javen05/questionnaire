@@ -76,10 +76,12 @@ questions = [
             "question": "Please provide feedback",
             // don't need to specify options if it's response
         },
-    ]
+]
     
 compulsoryQuestions = [1, "Feedback"];
-    
+
+
+
 function generateQuestion(questionNumber, question, options, inputType, trigger) {
     const defaultOption = '<option value="" disabled selected>Please select an option</option>';
     let html = `
