@@ -23,31 +23,30 @@
             var urlParams = new URLSearchParams(window.location.search);
             var formData = urlParams.get('data');
             var resultsContainer = document.getElementById('results');
-
+        
             // Parse JSON data and display results
             if (formData) {
                 var parsedData = JSON.parse(decodeURIComponent(formData));
                 parsedData.forEach(function(entry) {
                     var resultHtml = '<div class="mb-3">';
                     resultHtml += '<strong>Question Number:</strong> ' + entry.number + '<br>';
-                    resultHtml += '<strong>Question:</strong> ' + entry.question + '<br>';
-                    resultHtml += '<strong>Answer:</strong> ' + entry.value.join(', ');
+                    resultHtml += '<strong>Answer:</strong> ' + entry.value + '<br>';
                     resultHtml += '</div>';
                     resultsContainer.innerHTML += resultHtml;
                 });
             } else {
                 resultsContainer.innerHTML = '<p>No data available.</p>';
             }
-
+        
             // Function to convert JSON to CSV
             function jsonToCsv(json) {
-                var csv = 'Question Number,Question,Answer\n';
+                var csv = 'Question Number,Answer\n';
                 json.forEach(function(obj) {
-                    csv += obj.number + ',' + obj.question + ',"' + obj.value + '"\n';
+                    csv += obj.number + ',"' + obj.value + '"\n';
                 });
                 return csv;
             }
-
+        
             // Function to trigger download of JSON and CSV files
             document.getElementById('downloadJson').addEventListener('click', function(event) {
                 event.preventDefault();
@@ -61,7 +60,7 @@
                 a.click();
                 document.body.removeChild(a);
             });
-
+        
             document.getElementById('downloadCsv').addEventListener('click', function(event) {
                 event.preventDefault();
                 var csvData = jsonToCsv(parsedData);
@@ -74,12 +73,13 @@
                 a.click();
                 document.body.removeChild(a);
             });
-
+        
             // Retry questionnaire button click event
             document.getElementById('retryButton').addEventListener('click', function() {
                 // Redirect to the questionnaire page
                 window.location.href = 'index.html';
             });
         </script>
+        
     </body>
 </html>
