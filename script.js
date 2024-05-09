@@ -5,7 +5,56 @@ questions = [
         "question": "During the past two weeks, how often have you felt down, depressed, or hopeless?",
         "options": [
             { "value": 0, "label": "Not at all", "trigger": "Q2" },
-            { "value": 3, "label": "Nearly every day", "trigger": "Q2" }
+            { "value": 3, "label": "Nearly every day", "trigger": "Q2" },
+            { "value": 4, "label": "Try out algorithm.js", "trigger": "D22bt" }
+        ]
+    },
+    {
+        "number": "D22bt",
+        "question": "Do you feel depressed?",
+        "options": [
+            { "value": 0, "label": "Not at all", "trigger": "D22dt" },
+            { "value": 3, "label": "Nearly every day", "trigger": "D22dt" },
+            { "value": 4, "label": "No response", "trigger": "D22bt" }
+        ]
+    },
+    {
+        "number": "D22dt",
+        "question": "How difficult have these feelings made it for you to perform your work, take care of things at home, or get along with other people?",
+        "options": [
+            { "value": 0, "label": "Not difficult at all", "trigger": "D39t" },
+            { "value": 1, "label": "Somewhat difficult", "trigger": "D39t" },
+            { "value": 2, "label": "Very difficult", "trigger": "D39t" },
+            { "value": 3, "label": "Extremely difficult", "trigger": "D39t" },
+            { "value": 4, "label": "Unable to do work or take care of things", "trigger": "D39t" },
+            { "value": 5, "label": "Unable to get along with other people", "trigger": "D39t" }
+        ]
+    },
+    {
+        "number": "D39t",
+        "question": "How often have you had trouble falling asleep, staying asleep, or sleeping too much?",
+        "options": [
+            { "value": 0, "label": "Not at all", "trigger": "D26dm" },
+            { "value": 3, "label": "Nearly every day", "trigger": "D26dm" },
+            { "value": 4, "label": "Try out algorithm.js", "trigger": "D26dm" }
+        ]
+    },
+    {
+        "number": "D26dm",
+        "question": "Do you feel bad about yourself or that you are a failure or have let yourself or your family down?",
+        "options": [
+            { "value": 0, "label": "Not at all", "trigger": "D26fm" },
+            { "value": 3, "label": "Nearly every day", "trigger": "D26fm" },
+            { "value": 4, "label": "End questionnaire"}
+        ]
+    },
+    {
+        "number": "D26fm",
+        "question": "Do you have trouble concentrating on things like reading the newspaper or watching television?",
+        "options": [
+            { "value": 0, "label": "Not at all" },
+            { "value": 3, "label": "Nearly every day" },
+            { "value": 4, "label": "No response"}
         ]
     },
     {
@@ -78,9 +127,9 @@ questions = [
     },
     {
         "number": "Q6",
-        "question": "How often have you become easily annoyed or irritable?",
+        "question": "Click Yes to instantly get diagnosed with depression",
         "options": [
-            { "value": 0, "label": "Not at all", "trigger": "Q7" },
+            { "value": "bad", "label": "Not at all", "trigger": "Q7" },
             { "value": 1, "label": "Several days", "trigger": "Q7" },
             { "value": 2, "label": "More than half the days", "trigger": "Q7" },
             { "value": 3, "label": "Nearly every day", "trigger": "Q7" }
