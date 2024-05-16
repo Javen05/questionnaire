@@ -397,7 +397,7 @@ function updateQuestionPool(questionNumber) {
 
 // Event listener for radio box clear button in response type question
 document.addEventListener('click', function(event) {
-    if (event.target && event.target.classList.contains('clear-radio')) {
+    if (event.target.classList.contains('clear-radio')) {
         const questionNumber = event.target.closest('.question').getAttribute('data-question');
         document.querySelectorAll(`[name="question${questionNumber}"]`).forEach(input => {
             if (input.type === 'radio') {
@@ -405,7 +405,7 @@ document.addEventListener('click', function(event) {
             }
         });
     }
-    if (event.target && event.target.classList.contains('proceed-btn')) {
+    if (event.target.classList.contains('proceed-btn')) {
         const trigger = event.target.getAttribute('data-trigger');
         const questionNumber = event.target.closest('.question').getAttribute('data-question');
         if (trigger) {
