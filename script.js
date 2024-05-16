@@ -364,7 +364,7 @@ function updateQuestionPool(questionNumber) {
     } else {
         selectedOptions = Array.from(document.querySelectorAll(`[data-question="${questionNumber}"] option:checked`)).map(option => option.getAttribute('data-trigger'));
     }
-    questionPool[questionNumber] = selectedOptions;
+    questionPool[questionNumber] = selectedOptions.filter(option => option);
     for(const option of selectedOptions) {
         questionPool[option] = [];
     }
