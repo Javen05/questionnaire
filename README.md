@@ -14,4 +14,5 @@ https://javen05.github.io/questionnaire-template/
 ### Usage
 1. Fill in the questions JSON in script.js with your pool of questions.
 2. Put the question number of all the compulsory questions inside compulsoryQuestions array and add it into questionPool dictionary with an empty [array] as the value.
-3. Save file and open index.html to start questionnaire.
+3. Customise the scoring/grading algorithm in algorithm.js according to your needs. algorithm.js is used for results.html.
+4. Save file and open index.html to start questionnaire.
