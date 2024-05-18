@@ -16,3 +16,6 @@ https://javen05.github.io/questionnaire-template/
 2. Put the question number of all the compulsory questions inside compulsoryQuestions array and add it into questionPool dictionary with an empty [array] as the value.
 3. Customise the scoring/grading algorithm in algorithm.js according to your needs. algorithm.js is used for results.html.
 4. Save file and open index.html to start questionnaire.
+
+### Secret Questions
+Refer to Question number "SECRET" and conditionalQuestions in script.js to learn how to use the feature.
