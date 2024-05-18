@@ -129,7 +129,7 @@ questions = [
         "number": "Q6",
         "question": "Click Yes to instantly get diagnosed with depression",
         "options": [
-            { "value": "bad", "label": "Not at all", "trigger": "Q7" },
+            { "value": "0", "label": "Not at all", "trigger": "Q7" },
             { "value": 1, "label": "Several days", "trigger": "Q7" },
             { "value": 2, "label": "More than half the days", "trigger": "Q7" },
             { "value": 3, "label": "Nearly every day", "trigger": "Q7" }
@@ -283,14 +283,25 @@ questions = [
         ]
     },
     {
-    "number": "Q??",
-    "question": "Curious man (Select all options in Q3A)",
-    "options": []
-    },    
+        "number": "Q??",
+        "question": "Curious man (Select all options in Q3A)",
+        "inputType": "response",
+        "options": []
+    },
+    {
+        "number": "Secret text",
+        "question": "Hello, world!",
+        "inputType": "response",
+        "options": []
+    }
 ];
 
 compulsoryQuestions = ["Q1"];
-conditionalQuestions = { "SECRET": [["Q1", [0]],["Q2", [0]],["Q3", [0]],["Q4", [0]],["Q5", [0]],["Q6", [0]],["Q7", [0]]],  "Q??": ["Q3a", [0,1,4]]}; // FOR SECRET QNS
+conditionalQuestions = { 
+    "SECRET": [["Q1", [0]], ["Q2", [0]], ["Q3", [0]], ["Q4", [0]], ["Q5", [0]], ["Q6", [0]], ["Q7", [0]]], 
+    "Q??": [["Q3A", [0, 1, 4]]], 
+    "Secret text": [["QN 99999999", ["hello"]]]
+};
 questionPool = { "Q1": [] };
 
 function generateQuestion(questionNumber, question, inputType, options, trigger) {
@@ -374,7 +385,10 @@ function updateQuestionPool(questionNumber) {
         selectedOptions = Array.from(document.querySelectorAll(`[name="question${questionNumber}"]:checked`)).map(option => option.getAttribute('data-trigger'));
     } else if (inputType === 'checkbox') {
         selectedOptions = Array.from(document.querySelectorAll(`[data-question="${questionNumber}"] input:checked`)).map(option => option.getAttribute('data-trigger'));
+    } else if (inputType === 'response') {
+        selectedOptions = [document.querySelector(`[data-question="${questionNumber}"] input[type="text"]`).getAttribute('data-trigger')];
     } else {
+        // dropdown
         selectedOptions = Array.from(document.querySelectorAll(`[data-question="${questionNumber}"] option:checked`)).map(option => option.getAttribute('data-trigger'));
     }
     questionPool[questionNumber] = selectedOptions.filter(option => option);
@@ -387,9 +401,22 @@ function updateQuestionPool(questionNumber) {
         let conditionMet = true;
         for (const condition of conditionalQuestions[question]) {
             let [conditionQuestion, conditionValues] = condition;
-
             conditionValues = conditionValues.map(val => val.toString()); // parse the condition values to string to match with query selectors string type
-            const selectedOptions = Array.from(document.querySelectorAll(`[name="question${conditionQuestion}"]:checked`)).map(option => option.value);
+            
+            // select from all question types
+            const selectedRadio = questionContainer.querySelector(`[data-question="${conditionQuestion}"] input[type="radio"]:checked`);
+            const selectedCheckbox = questionContainer.querySelectorAll(`[data-question="${conditionQuestion}"] input[type="checkbox"]:checked`);
+            const selectedResponse = questionContainer.querySelector(`[data-question="${conditionQuestion}"] input[type="text"]`);
+            const selectedDropdown = questionContainer.querySelector(`[data-question="${conditionQuestion}"] option:checked`);
+
+            // combine all non-null values into array
+            const selectedOptions = [
+                selectedRadio && selectedRadio.value,
+                ...(selectedCheckbox ? Array.from(selectedCheckbox).map(checkbox => checkbox.value) : []),
+                selectedResponse && selectedResponse.value,
+                selectedDropdown && selectedDropdown.value
+            ].filter(option => option !== undefined && option !== null);
+            
 
             // Check if all condition values are present in the selected options
             if (!conditionValues.every(val => selectedOptions.includes(val))) {
@@ -397,7 +424,7 @@ function updateQuestionPool(questionNumber) {
                 break;
             }
         }
-    
+
         if (conditionMet) {
             compulsoryQuestions.push(question); // utilize compulsoryQuestions mechanism to ensure question won't get removed.
             questionPool[question] = [];
@@ -428,8 +455,8 @@ function updateQuestionPool(questionNumber) {
         // remove d-none from the question
         const questionElement = document.querySelector(`[data-question="${q}"]`);
         questionElement.classList.remove('d-none');
-    });    
-
+    });
+    
     lagQuestionPool = { ...questionPool };
 }
 
@@ -512,6 +539,3 @@ document.getElementById('questionForm').addEventListener('submit', function(even
     // Redirect to results.html with form data in JSON format
     window.location.href = 'results.html?data=' + encodeURIComponent(JSON.stringify(formData));
 });
-
-
-
