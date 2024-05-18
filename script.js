@@ -290,7 +290,7 @@ questions = [
 ];
 
 compulsoryQuestions = ["Q1"];
-conditionalQuestions = { "SECRET": [["Q1", [0]],["Q2", [0]],["Q3", [0]],["Q4", [0]],["Q5", [0]],["Q6", [0]],["Q7", [0]]],  "Q??": [0,1,4]}; // FOR SECRET QNS
+conditionalQuestions = { "SECRET": [["Q1", [0]],["Q2", [0]],["Q3", [0]],["Q4", [0]],["Q5", [0]],["Q6", [0]],["Q7", [0]]],  "Q??": ["Q3a", [0,1,4]]}; // FOR SECRET QNS
 questionPool = { "Q1": [] };
 
 function generateQuestion(questionNumber, question, inputType, options, trigger) {
