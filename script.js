@@ -1,4 +1,13 @@
 questions = [
+// To add questions:
+//   {
+//     "number": "Question number; ID of question",
+//     "question": "Question info and stuff",
+//     "inputType": "checkbox, radio, response", // remove inputType to use dropdown
+//      // for response, options [] cannot be configured. value for don't know = 998, refused = 999
+//     "options": [ {value (optional), label, trigger (optional) } ]
+//     "trigger": "questionNumber" // ONLY WORKS FOR reponse inputType
+//   },
     {
         "number": "Q1",
         "inputType": "radio",
@@ -295,28 +304,17 @@ questions = [
         "options": []
     }
 ];
-// To add questions:
-//   {
-//     "number": "Question number; ID of question",
-//     "question": "Question info and stuff",
-//     "inputType": "checkbox, radio, response", // remove inputType to use dropdown
-//      // for response, options [] cannot be configured. value for don't know = 998, refused = 999
-//     "options": [ {value (optional), label, trigger (optional) } ]
-//     "trigger": "questionNumber" // ONLY WORKS FOR reponse inputType
-//   }
 
 compulsoryQuestions = ["Q1"];
 conditionalQuestions = { 
     "SECRET": [["Q1", [0]], ["Q2", [0]], ["Q3", [0]], ["Q4", [0]], ["Q5", [0]], ["Q6", [0]], ["Q7", [0]]], 
     "Q??": [["Q3A", [0, 1, 4]]], 
     "Secret text": [["QN 99999999", ["hello"]]]
+//  "D9a_1": [[ "D9a", ['~999', '~998']]], // '~' means not equal to. 
+//  // If selectedOptions for D9a NOT EQUAL TO 999 and 998, then condition is true and Qn will show.
+//  "D9a_2": [[ "D9a", [999, 998], 'or' ]], // 'or' means any value in D9a will satisfy the condition
 };
-// Additional mechanisms in conditionalQuestions:
-// conditionalQuestions = { 
-//    "D9a_1": [[ "D9a", ['~999', '~998']]], // '~' means not equal to. 
-//    If selectedOptions for D9a NOT EQUAL TO 999 and 998, then condition is true and Qn will show.
-//    "D9a_2": [[ "D9a", [999, 998], 'or' ]], // 'or' means any value in D9a will satisfy the condition
-//};
+
 questionPool = { "Q1": [] }; // add compulsory questions into dictionary accordingly
 
 function generateQuestion(questionNumber, question, inputType, options, trigger) {
