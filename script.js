@@ -274,10 +274,19 @@ questions = [
             { "value": 2, "label": "More than half the days" },
             { "value": 3, "label": "Nearly every day" }
         ]
-    }
+    },
+    {
+        "number": "SECRET",
+        "question": "You chose options with value 0 for Qn 1-7",
+        "options": [
+            { "value": 0, "label": "Not at all" },
+        ]
+    },
+        
 ];
 
 compulsoryQuestions = ["Q1"];
+conditionalQuestions = { "SECRET": [["Q1", 0],["Q2", 0],["Q3", 0],["Q4", 0],["Q5", 0],["Q6", 0],["Q7", 0]] }; // FOR SECRET QNS
 questionPool = { "Q1": [] };
 
 function generateQuestion(questionNumber, question, inputType, options, trigger) {
@@ -368,6 +377,31 @@ function updateQuestionPool(questionNumber) {
     for(const option of selectedOptions) {
         questionPool[option] = [];
     }
+
+    // Check if any conditional question should be added to the question pool
+    for (const question in conditionalQuestions) {
+        let conditionMet = true;
+        for (const condition of conditionalQuestions[question]) {
+            let [conditionQuestion, conditionValues] = condition;
+
+            conditionValues = conditionValues.map(val => val.toString()); // parse the condition values to string to match with query selectors string type
+            const selectedOptions = Array.from(document.querySelectorAll(`[name="question${conditionQuestion}"]:checked`)).map(option => option.value);
+
+            // Check if all condition values are present in the selected options
+            if (!conditionValues.every(val => selectedOptions.includes(val))) {
+                conditionMet = false;
+                break;
+            }
+        }
+    
+        if (conditionMet) {
+            compulsoryQuestions.push(question); // utilize compulsoryQuestions mechanism to ensure question won't get removed.
+            questionPool[question] = [];
+        } else {
+            compulsoryQuestions = compulsoryQuestions.filter(q => q !== question);
+            delete questionPool[question];
+        }
+    }    
 
     // if any key in questionPool not in compulsoryQuestions or value of questionPool, drop it
     for(const key in questionPool) {
