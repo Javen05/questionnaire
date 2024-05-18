@@ -279,7 +279,7 @@ questions = [
         "number": "SECRET",
         "question": "You chose options with value 0 for Qn 1-7",
         "options": [
-            { "value": 0, "label": "Not at all" },
+            { "label": "Not at all" },
         ]
     },
     {
@@ -295,6 +295,15 @@ questions = [
         "options": []
     }
 ];
+// To add questions:
+//   {
+//     "number": "Question number; ID of question",
+//     "question": "Question info and stuff",
+//     "inputType": "checkbox, radio, response", // remove inputType to use dropdown
+//      // for response, options [] cannot be configured. value for don't know = 998, refused = 999
+//     "options": [ {value (optional), label, trigger (optional) } ]
+//     "trigger": "questionNumber" // ONLY WORKS FOR reponse inputType
+//   }
 
 compulsoryQuestions = ["Q1"];
 conditionalQuestions = { 
@@ -302,7 +311,13 @@ conditionalQuestions = {
     "Q??": [["Q3A", [0, 1, 4]]], 
     "Secret text": [["QN 99999999", ["hello"]]]
 };
-questionPool = { "Q1": [] };
+// Additional mechanisms in conditionalQuestions:
+// conditionalQuestions = { 
+//    "D9a_1": [[ "D9a", ['~999', '~998']]], // '~' means not equal to. 
+//    If selectedOptions for D9a NOT EQUAL TO 999 and 998, then condition is true and Qn will show.
+//    "D9a_2": [[ "D9a", [999, 998], 'or' ]], // 'or' means any value in D9a will satisfy the condition
+//};
+questionPool = { "Q1": [] }; // add compulsory questions into dictionary accordingly
 
 function generateQuestion(questionNumber, question, inputType, options, trigger) {
     const defaultOption = '<option value="" disabled selected>Please select an option</option>';
@@ -400,7 +415,7 @@ function updateQuestionPool(questionNumber) {
     for (const question in conditionalQuestions) {
         let conditionMet = true;
         for (const condition of conditionalQuestions[question]) {
-            let [conditionQuestion, conditionValues] = condition;
+            let [conditionQuestion, conditionValues, option] = condition;
             conditionValues = conditionValues.map(val => val.toString()); // parse the condition values to string to match with query selectors string type
             
             // select from all question types
@@ -417,9 +432,17 @@ function updateQuestionPool(questionNumber) {
                 selectedDropdown && selectedDropdown.value
             ].filter(option => option !== undefined && option !== null);
             
-
-            // Check if all condition values are present in the selected options
-            if (!conditionValues.every(val => selectedOptions.includes(val))) {
+            if (option === 'or') {
+                // any value in conditionValues is in selectedOptions
+                conditionMet = conditionValues.some(val => selectedOptions.includes(val));
+                break;
+            } else if (conditionValues.some(val => val.startsWith('~')) && !selectedOptions.includes("")) {
+                // slice out any '~' value in conditionValues
+                conditionValues = conditionValues.map(val => val.replace('~', ''));
+                // any value in conditionValues is not in selectedOptions
+                conditionMet = conditionValues.every(val => !selectedOptions.includes(val));
+                break;
+            } else if (!conditionValues.every(val => selectedOptions.includes(val))) {
                 conditionMet = false;
                 break;
             }
