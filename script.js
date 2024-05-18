@@ -319,7 +319,7 @@ function generateQuestion(questionNumber, question, inputType, options, trigger)
                         <label class="form-check-label" for="q${questionNumber}optionRefused">Refused</label> 
                     </div>
                 </div>
-                <button type="button" class="btn btn-secondary clear-radio">Clear</button> <button type="button" class="btn btn-primary proceed-btn" data-trigger="${trigger || ''}">Proceed</button>
+                <button type="button" class="btn btn-secondary clear-radio">Clear</button> ${trigger ? `<button type="button" class="btn btn-primary proceed-btn" data-trigger="${trigger}">Proceed</button>` : ''}
             `;
             break;
         default:
