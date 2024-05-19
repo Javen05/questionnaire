@@ -136,9 +136,9 @@ questions = [
     },
     {
         "number": "Q6",
-        "question": "Click Yes to instantly get diagnosed with depression",
+        "question": "Very cool and random qn number 6",
         "options": [
-            { "value": "0", "label": "Not at all", "trigger": "Q7" },
+            { "value": "bad", "label": "Instant score of 10", "trigger": "Q7" },
             { "value": 1, "label": "Several days", "trigger": "Q7" },
             { "value": 2, "label": "More than half the days", "trigger": "Q7" },
             { "value": 3, "label": "Nearly every day", "trigger": "Q7" }
