@@ -104,7 +104,6 @@ function transposeData(data) {
     return transposedData;
 }
 
-
 // Function to trigger download of CSV file
 function downloadCsv(csvData) {
     var blob = new Blob([csvData], { type: 'text/csv' });
@@ -127,6 +126,7 @@ document.getElementById('retryButton').addEventListener('click', function() {
 /**
  * ALGORITHM LOGIC BELOW
  */
+// Note: This algorithm runs on rubbish logic. It's sole purpose is demo how an algorithm logic can be integrated into this web app.
 
 var score = 0;
 
