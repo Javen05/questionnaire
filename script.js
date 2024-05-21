@@ -790,6 +790,12 @@ document
   .getElementById("questionForm")
   .addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent default form submission
+    var confirmationCheckbox = document.getElementById("confirmationCheckbox");
+    if (!confirmationCheckbox.checked) {
+      alert("Please confirm that your answers are correct before submitting.");
+      return; // Prevent form submission if the checkbox is not checked
+    }
+
     var formData = [];
 
     document.querySelectorAll(".question").forEach(function (element) {
