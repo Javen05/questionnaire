@@ -311,11 +311,13 @@ questions = [
     {
         number: "INSTRUCTION-1",
         question: `You could give a cool background or context before your questions just like this one! <br>Click proceed to continue...`,
+        inputType: "display",
         trigger: "INSTRUCTION-QN"
     },
     {
         number: "INSTRUCTION-QN",
         question: `Hello this is the end.`,
+        inputType: "display",
         // trigger is optional, proceed button will not show if no trigger exist for qn
     }
 ];
