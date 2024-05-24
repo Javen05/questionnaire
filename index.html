@@ -4,13 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Questionnaire</title>
+    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+        .overlay {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 9999;
+        }
+
+        .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 4px solid #f3f3f3; /* Light grey */
+        border-top: 4px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Questions</h1>
         <form id="questionForm">
+            <!-- Loading Overlay -->
+            <div id="loadingOverlay" class="overlay">
+                <div class="spinner"></div>
+            </div>
+              
             <!-- Reusable Question Component -->
             <div id="questionContainer"></div>
 
@@ -19,14 +55,16 @@
                 <input type="checkbox" id="confirmationCheckbox" />
                 <label for="confirmationCheckbox">I confirm that my answers are correct</label>
             </div>
+
             <!-- Submit Button -->
             <div class="row justify-content-center">
                 <button type="submit" class="btn btn-primary btn-block" style="width: 96%">Submit</button>
             </div>
         </form>
     </div>
+
     <!-- JavaScript -->
-    <script src="questions.js"></script>
-    <script defer src="questionnaire-logic.js"></script>
+    <script src="question.js"></script>
+    <script defer src="questionnaire-template.js"></script>
 </body>
 </html>
