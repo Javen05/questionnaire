@@ -214,8 +214,14 @@ function updateQuestionPool(questionNumber) {
       return;
     }
     selectedOptions = [responseInput.getAttribute("data-trigger")];
+  } else if (inputType === "display") {
+    selectedOptions = Array.from(
+      document.querySelectorAll(
+        `[data-question="${questionNumber}"] button.proceed-btn`
+      )
+    ).map((option) => option.getAttribute("data-trigger"));
   } else {
-    // dropdown
+    // select a.k.a dropdown
     selectedOptions = Array.from(
       document.querySelectorAll(
         `[data-question="${questionNumber}"] option:checked`
@@ -316,12 +322,39 @@ function updateQuestionPool(questionNumber) {
 
   // edit the DOM to reflect the changes
   removedQuestions.forEach((question) => {
-    // add d-none to the question
+    // add d-none to the question and clear selection if any
     const questionElement = document.querySelector(
       `[data-question="${question}"]`
     );
     if (questionElement) {
       questionElement.classList.add("d-none");
+
+      // Clear selection for removed question
+      const select = questionElement.querySelector("select");
+      const responseInput = questionElement.querySelector('input[type="text"]');
+      const checkboxes = questionElement.querySelectorAll('input[type="checkbox"]');
+      const radioButtons = questionElement.querySelectorAll('input[type="radio"]');
+
+      // Reset select input
+      if (select) {
+        select.selectedIndex = 0; // Reset select to default option
+      }
+
+      // Reset text input
+      if (responseInput) {
+        responseInput.value = "";
+      }
+
+      // Reset checkbox inputs
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+
+      // Reset radio button inputs
+      radioButtons.forEach((radioButton) => {
+        radioButton.checked = false;
+      });
+
     } else {
       console.error(
         "updateQuestionPool: questionElement for removed question is null",
@@ -503,4 +536,4 @@ document.getElementById("questionForm").addEventListener("submit", function (eve
     window.location.href = "results.html?data=" + encodeURIComponent(JSON.stringify(formData));
 });
 
-document.getElementById("loadingOverlay").style.display = "none"; // Hide spinner after page is loaded
+document.getElementById("loadingOverlay").style.display = "none"; // Hide the loading after page is loaded
