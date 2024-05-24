@@ -454,9 +454,7 @@ document.addEventListener("change", function (event) {
   }
 });
 
-document
-  .getElementById("questionForm")
-  .addEventListener("submit", function (event) {
+document.getElementById("questionForm").addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent default form submission
     var confirmationCheckbox = document.getElementById("confirmationCheckbox");
     if (!confirmationCheckbox.checked) {
@@ -502,6 +500,7 @@ document
     });
 
     // Redirect to results.html with form data in JSON format
-    window.location.href =
-      "results.html?data=" + encodeURIComponent(JSON.stringify(formData));
-  });
+    window.location.href = "results.html?data=" + encodeURIComponent(JSON.stringify(formData));
+});
+
+document.getElementById("loadingOverlay").style.display = "none"; // Hide spinner after page is loaded
