@@ -338,4 +338,4 @@ conditionalQuestions = {
 //  "D9a_2": [[ "D9a", [999, 998], 'or' ]], // 'or' means any value in D9a will satisfy the condition
 };
 
-questionPool = { "Q1": [], "INSTRUCTION-1": []}; // add compulsory questions into dictionary accordingly
+questionPool = {}; // init questionPool
