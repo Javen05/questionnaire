@@ -14,4 +14,4 @@ https://javen05.github.io/questionnaire-template/
 4. Save file and open index.html to start questionnaire.
 
 ### Secret Questions
-Refer to Question number "SECRET" and conditionalQuestions in script.js to learn how to use the feature.
+Refer to Question number "SECRET" and conditionalQuestions in questions.js to learn how to use the feature.
