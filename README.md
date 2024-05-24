@@ -8,8 +8,8 @@ Need a cusomizable questionnaire form like Google Forms that can run locally (of
 https://javen05.github.io/questionnaire-template/
 
 ### Usage
-1. Fill in the questions JSON in script.js with your pool of questions.
-2. Put the question number of all the compulsory questions inside compulsoryQuestions array.
+1. Fill in the questions JSON in questions.js with your pool of questions.
+2. Put the question number of all questions that must be answered inside compulsoryQuestions array. Should have atleast 1 qn to begin with and trigger other qns.
 3. Customise the scoring/grading algorithm in algorithm.js according to your needs. algorithm.js is used for results.html.
 4. Save file and open index.html to start questionnaire.
 
