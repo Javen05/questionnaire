@@ -166,6 +166,8 @@ if (scoreElement) {
     scoreElement.textContent = normalizedScore;
 }
 
+document.getElementById("loadingOverlay").style.display = "none"; // Hide the loading after page is loaded
+
 
 
 
