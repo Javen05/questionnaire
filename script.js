@@ -319,14 +319,20 @@ questions = [
         question: `Hello this is the end.`,
         inputType: "display",
         // trigger is optional, proceed button will not show if no trigger exist for qn
-    }
+    },
+        {
+        number: "test123",
+        question: `works`,
+        inputType: "display",
+    },
 ];
 
 compulsoryQuestions = ["Q1", "INSTRUCTION-1"];
 conditionalQuestions = { 
     "SECRET": [["Q1", [0]], ["Q2", [0]], ["Q3", [0]], ["Q4", [0]], ["Q5", [0]], ["Q6", [0]], ["Q7", [0]]], 
     "Q??": [["Q3A", [0, 1, 4]]], 
-    "Secret text": [["QN 99999999", ["hello"]]]
+    "Secret text": [["QN 99999999", ["hello"]]],
+    "test123": [["QN 99999999", ["~hello"]]]
 //  "D9a_1": [[ "D9a", ['~999', '~998']]], // '~' means not equal to. 
 //  // If selectedOptions for D9a NOT EQUAL TO 999 and 998, then condition is true and Qn will show.
 //  "D9a_2": [[ "D9a", [999, 998], 'or' ]], // 'or' means any value in D9a will satisfy the condition
@@ -520,9 +526,13 @@ function updateQuestionPool(questionNumber) {
 
   const inputType = questionElement.querySelector("select")
     ? "select"
-    : questionElement.querySelector('input[type="radio"]')
-    ? "radio"
-    : "checkbox";
+    : questionElement.querySelector('input[type="text"]')
+    ? "response"
+    : questionElement.querySelector('input[type="checkbox"]')
+    ? "checkbox"
+    : questionElement.querySelector(".display-text")
+    ? "display"
+    : "radio";
 
   let selectedOptions = [];
   if (inputType === "radio") {
