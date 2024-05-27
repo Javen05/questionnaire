@@ -57,14 +57,13 @@ document.getElementById('downloadCsv').addEventListener('click', function(event)
 function generateCsv(data) {
     // Transpose the data
     let transposedData = transposeData(data);
-
     // Prepare CSV header
-    let csv = `"Score"\n${outputScore}`;
-
+    let csv = '';
     // Add data rows
     transposedData.forEach(function(row) {
         csv += row.join(',') + '\n'; // Add each row without the score column
     });
+    csv += `"Score"\n${outputScore}`;
     return csv;
 }
 
