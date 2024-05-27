@@ -63,14 +63,15 @@ function generateCsv(data) {
     transposedData.forEach(function(row) {
         csv += row.join(',') + '\n'; // Add each row without the score column
     });
-    csv += `"Score"\n${outputScore}`;
     return csv;
 }
 
 // Function to transpose data
 function transposeData(data) {
-    // Assuming data is an array of objects with 'number' and 'value' properties
     let transposedData = [];
+
+    // add score into data before transposing
+    data['Score'] = outputScore;
 
     // Iterate over each object in the data array
     data.forEach(function(obj) {
@@ -82,7 +83,7 @@ function transposeData(data) {
             transposedData[index].push(value);
         });
     });
-
+    
     return transposedData;
 }
 
