@@ -16,12 +16,8 @@ function generateQuestion(questionNumber, question, inputType, options, trigger)
         options.forEach((option) => {
           html += `
                     <div class="form-check">
-                        <input class="form-check-input" type="${inputType}" name="question${questionNumber}" id="q${questionNumber}option${
-            option.value
-          }" value="${option.value}" data-trigger="${option.trigger || ""}">
-                        <label class="form-check-label" for="q${questionNumber}option${
-            option.value
-          }">${option.label}</label>
+                        <input class="form-check-input" type="${inputType}" name="question${questionNumber}" id="q${questionNumber}option${option.value}" value="${option.value}" data-trigger="${option.trigger || ""}">
+                        <label class="form-check-label" for="q${questionNumber}option${option.value}">${option.label}</label>
                     </div>
                 `;
         });
@@ -37,23 +33,12 @@ function generateQuestion(questionNumber, question, inputType, options, trigger)
         options.forEach(function (option) {
           html += '<div class="form-check">';
           html +=
-            '<input class="form-check-input" type="checkbox" id="q' +
-            questionNumber +
-            "option" +
-            option.value +
-            '" value="' +
-            option.value +
-            '" data-trigger="' +
-            (option.trigger ? option.trigger : "") +
-            '">';
+            '<input class="form-check-input" type="checkbox" id="q' + questionNumber + "option" +
+            option.value + '" value="' + option.value + '" data-trigger="' + (option.trigger ? option.trigger : "") + '">';
           html +=
-            '<label class="form-check-label" for="q' +
-            questionNumber +
-            "option" +
-            option.value +
-            '">' +
-            option.label +
-            "</label>";
+            '<label class="form-check-label" for="q' + questionNumber +
+            "option" + option.value + '">' +
+            option.label + "</label>";
           html += "</div>";
         });
       } else {
@@ -66,9 +51,7 @@ function generateQuestion(questionNumber, question, inputType, options, trigger)
       case "response":
         html += `
                   <div class="response-input">
-                      <input class="form-control" type="text" id="q${questionNumber}response" name="question${questionNumber}response" placeholder="Your response" data-trigger="${
-          trigger || ""
-        }">
+                      <input class="form-control" type="text" id="q${questionNumber}response" name="question${questionNumber}response" placeholder="Your response" data-trigger="${trigger || ""}">
               `;
   
         if (Array.isArray(options) && options.length > 0) {
@@ -76,9 +59,7 @@ function generateQuestion(questionNumber, question, inputType, options, trigger)
             html += `
                       <div class="form-check">
                           <input class="form-check-input" type="radio" name="question${questionNumber}" id="q${questionNumber}option${option.value}" value="${option.value}" data-trigger="${option.trigger || ""}">
-                          <label class="form-check-label" for="q${questionNumber}option${
-              option.value
-            }">${option.label}</label>
+                          <label class="form-check-label" for="q${questionNumber}option${option.value}">${option.label}</label>
                       </div>
                   `;
           });
