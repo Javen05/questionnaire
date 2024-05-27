@@ -14,17 +14,9 @@ if (formData) {
         resultHtml += '</div>';
         resultsContainer.innerHTML += resultHtml;
     });
+    
 } else {
     resultsContainer.innerHTML = '<p>No data available.</p>';
-}
-
-// Function to convert JSON to CSV
-function jsonToCsv(json) {
-    var csv = 'Question Number,Answer\n';
-    json.forEach(function(obj) {
-        csv += obj.number + ',"' + obj.value + '"\n';
-    });
-    return csv;
 }
 
 // Function to trigger download of JSON and CSV files
@@ -55,15 +47,6 @@ document.getElementById('downloadJson').addEventListener('click', function(event
     document.body.removeChild(a);
 });
 
-// Function to convert JSON to CSV
-function jsonToCsv(json, outputScore) {
-    var csv = `"Score", ${outputScore},\n`; // Add the score to the first row
-    json.forEach(function(obj) {
-      csv += `${obj.number},"${obj.value}"\n`;
-    });
-    return csv;
-}
-
 document.getElementById('downloadCsv').addEventListener('click', function(event) {
     event.preventDefault();
     var csvData = generateCsv(parsedData);
@@ -73,10 +56,10 @@ document.getElementById('downloadCsv').addEventListener('click', function(event)
 // Function to generate CSV data
 function generateCsv(data) {
     // Transpose the data
-    var transposedData = transposeData(data);
+    let transposedData = transposeData(data);
 
     // Prepare CSV header
-    var csv = 'Question Number,Answer\n';
+    let csv = `"Score"\n${outputScore}\n`;
 
     // Add data rows
     transposedData.forEach(function(row) {
@@ -88,7 +71,7 @@ function generateCsv(data) {
 // Function to transpose data
 function transposeData(data) {
     // Assuming data is an array of objects with 'number' and 'value' properties
-    var transposedData = [];
+    let transposedData = [];
 
     // Iterate over each object in the data array
     data.forEach(function(obj) {
