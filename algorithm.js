@@ -18,9 +18,9 @@ if (formData) {
 }
 
 // Function to convert JSON to CSV
-function jsonToCsv(json, normalizedScore) {
+function jsonToCsv(json, outputScore) {
     var csv = '';
-    csv += `${normalizedScore},\n`; // Add the normalized score to the first row
+    csv += `"Score", ${outputScore},\n`; // Add the score to the first row
     json.forEach(function(obj) {
         csv += `${obj.number},"${obj.value}"\n`;
     });
@@ -33,7 +33,7 @@ document.getElementById('downloadJson').addEventListener('click', function(event
     
     // Create a new object to hold both score and parsedData
     var dataWithScore = {
-        score: normalizedScore,
+        score: outputScore,
         data: parsedData
     };
 
@@ -57,7 +57,7 @@ document.getElementById('downloadJson').addEventListener('click', function(event
 
 document.getElementById('downloadCsv').addEventListener('click', function(event) {
     event.preventDefault();
-    var csvData = jsonToCsv(parsedData, normalizedScore); // Pass the parsedData and normalizedScore to the function
+    var csvData = jsonToCsv(parsedData, outputScore); // Pass the parsedData and outputScore to the function
     downloadCsv(csvData); // Download CSV file
 });
 
@@ -107,19 +107,19 @@ parsedData.forEach(function(entry) {
 // Curve the score to a scale of 1 to 10 using a bell curve approach
 // Assuming the maximum possible score is 70 and minimum is 0 (sum of scores from 10 questions)
 // Normalize the score to a scale of 1 to 10
-var normalizedScore = (score / 70) * 10;
-normalizedScore = Math.round(normalizedScore);
+var outputScore = (score / 70) * 10;
+outputScore = Math.round(outputScore);
 
 // Implement grade cap
-if (normalizedScore > 10) {
-    normalizedScore = 10;
+if (outputScore > 10) {
+    outputScore = 10;
 }
 
 // Display the calculated score on the HTML element with ID "score"
 var scoreElement = document.getElementById('score');
 if (scoreElement) {
     // Round the normalized score and display
-    scoreElement.textContent = normalizedScore;
+    scoreElement.textContent = outputScore;
 }
 
 document.getElementById("loadingOverlay").style.display = "none"; // Hide the loading after page is loaded
