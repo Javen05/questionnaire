@@ -18,10 +18,11 @@ if (formData) {
 }
 
 // Function to convert JSON to CSV
-function jsonToCsv(json) {
-    var csv = 'Question Number,Answer\n';
+function jsonToCsv(json, normalizedScore) {
+    var csv = '';
+    csv += `${normalizedScore},\n`; // Add the normalized score to the first row
     json.forEach(function(obj) {
-        csv += obj.number + ',"' + obj.value + '"\n';
+        csv += `${obj.number},"${obj.value}"\n`;
     });
     return csv;
 }
@@ -54,55 +55,11 @@ document.getElementById('downloadJson').addEventListener('click', function(event
     document.body.removeChild(a);
 });
 
-// Function to convert JSON to CSV
-function jsonToCsv(json, normalizedScore) {
-    var csv = 'Normalized Score,Question Number,Answer\n';
-    csv += `${normalizedScore},\n`; // Add the normalized score to the first row
-    json.forEach(function(obj) {
-      csv += `${obj.number},"${obj.value}"\n`;
-    });
-    return csv;
-}
-
 document.getElementById('downloadCsv').addEventListener('click', function(event) {
     event.preventDefault();
-    var csvData = generateCsv(parsedData);
+    var csvData = jsonToCsv(parsedData, normalizedScore); // Pass the parsedData and normalizedScore to the function
     downloadCsv(csvData); // Download CSV file
 });
-
-// Function to generate CSV data
-function generateCsv(data) {
-    // Transpose the data
-    var transposedData = transposeData(data);
-
-    // Prepare CSV header
-    var csv = 'Question Number,Answer\n';
-
-    // Add data rows
-    transposedData.forEach(function(row) {
-        csv += row.join(',') + '\n'; // Add each row without the score column
-    });
-    return csv;
-}
-
-// Function to transpose data
-function transposeData(data) {
-    // Assuming data is an array of objects with 'number' and 'value' properties
-    var transposedData = [];
-
-    // Iterate over each object in the data array
-    data.forEach(function(obj) {
-        // Iterate over each property in the object
-        Object.entries(obj).forEach(function([key, value], index) {
-            // Initialize a new array for each property if it doesn't exist
-            transposedData[index] = transposedData[index] || [];
-            // Push the property value to the corresponding index in the transposed array
-            transposedData[index].push(value);
-        });
-    });
-
-    return transposedData;
-}
 
 // Function to trigger download of CSV file
 function downloadCsv(csvData) {
@@ -121,7 +78,6 @@ document.getElementById('retryButton').addEventListener('click', function() {
     // Redirect to the questionnaire page
     window.location.href = 'index.html';
 });
-
 
 /**
  * ALGORITHM LOGIC BELOW
@@ -167,7 +123,3 @@ if (scoreElement) {
 }
 
 document.getElementById("loadingOverlay").style.display = "none"; // Hide the loading after page is loaded
-
-
-
-
