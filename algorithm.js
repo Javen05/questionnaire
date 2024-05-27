@@ -59,7 +59,7 @@ function generateCsv(data) {
     let transposedData = transposeData(data);
 
     // Prepare CSV header
-    let csv = `"Score"\n${outputScore}\n`;
+    let csv = `"Score"\n${outputScore}`;
 
     // Add data rows
     transposedData.forEach(function(row) {
